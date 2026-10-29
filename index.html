@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BenjaGames | Buscador & Enciclopedia Técnica de Videojuegos</title>
+  <meta name="description" content="BenjaGames: Portal interactivo avanzado para buscar, filtrar, clasificar y explorar fichas técnicas completas de videojuegos con requisitos de sistema, duración y análisis detallado.">
+  
+  <!-- Modern Gaming Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+  <!-- ==========================================
+       Header & Navigation Bar
+       ========================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" id="brand-logo" href="#top" onclick="window.nexusApp.resetAllFilters(); return false;">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">
+          <span class="brand-name">BenjaGames</span>
+          <span class="brand-subtitle">Database & Game Finder</span>
+        </div>
+      </a>
+
+      <!-- Instant Live Search Bar -->
+      <div class="header-search">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            id="global-search-input" 
+            class="search-input" 
+            placeholder="Buscar por título, desarrollador, saga o etiqueta..." 
+            autocomplete="off"
+          >
+          <button id="clear-search-btn" class="clear-search-btn" aria-label="Limpiar búsqueda">✕</button>
+        </div>
+        <!-- Autocomplete Suggestions Dropdown -->
+        <div id="search-autocomplete-list" class="search-autocomplete"></div>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="header-actions">
+        <button id="btn-roulette-open" class="action-btn" title="Elige un juego aleatorio">
+          <span>🎲</span>
+          <span>Ruleta Aleatoria</span>
+        </button>
+        <button id="btn-compare-open" class="action-btn" title="Comparar especificaciones entre juegos">
+          <span>⚖️</span>
+          <span>Comparar</span>
+          <span id="compare-counter" class="badge-counter" style="display:none;">0</span>
+        </button>
+        <button id="btn-wishlist-open" class="action-btn primary" title="Ver juegos guardados">
+          <span>⭐</span>
+          <span>Guardados</span>
+          <span id="wishlist-counter" class="badge-counter">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ==========================================
+         Hero Section - Game of the Week Spotlight
+         ========================================== -->
+    <section class="hero-section">
+      <div class="container">
+        <div id="hero-spotlight-container">
+          <!-- Dynamic Hero Rendered by JavaScript -->
+        </div>
+
+        <!-- Curated Mini Highlights -->
+        <div class="curated-highlights-grid" id="curated-mini-highlights">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         Discovery Section: Sidebar Filters + Game Grid
+         ========================================== -->
+    <section class="discovery-section">
+      <div class="container discovery-layout">
+        
+        <!-- Left Filter & Classification Sidebar -->
+        <aside class="filters-sidebar">
+          <div class="filter-header">
+            <h2 class="filter-title"><span>⚡</span> Filtros & Clasificación</h2>
+            <button id="btn-reset-filters" class="btn-reset-filters">Restablecer Todo</button>
+          </div>
+
+          <!-- Filter: Genre -->
+          <div class="filter-group">
+            <label class="filter-label" for="filter-genre">Género Principal</label>
+            <select id="filter-genre" class="filter-select">
+              <option value="Todos">Todos los Géneros</option>
+            </select>
+          </div>
+
+          <!-- Filter: Platform -->
+          <div class="filter-group">
+            <label class="filter-label" for="filter-platform">Plataforma</label>
+            <select id="filter-platform" class="filter-select">
+              <option value="Todas">Todas las Plataformas</option>
+            </select>
+          </div>
+
+          <!-- Filter: Metacritic Rating Slider -->
+          <div class="filter-group">
+            <div class="slider-container">
+              <div class="slider-values">
+                <span class="filter-label" style="margin-bottom:0;">Puntuación Mínima</span>
+                <span id="score-slider-value" class="slider-val-current">60+</span>
+              </div>
+              <input 
+                type="range" 
+                id="filter-score-slider" 
+                class="custom-range" 
+                min="60" 
+                max="95" 
+                value="60" 
+                step="5"
+              >
+              <div class="slider-values" style="font-size: 0.72rem;">
+                <span>60</span>
+                <span>80</span>
+                <span>95+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter: Price Category -->
+          <div class="filter-group">
+            <label class="filter-label" for="filter-price">Precio & Ofertas</label>
+            <select id="filter-price" class="filter-select">
+              <option value="all">Cualquier Precio</option>
+              <option value="free">Gratis (Free to Play)</option>
+              <option value="discounted">En Oferta / Descuento</option>
+              <option value="under-20">Menos de $20</option>
+              <option value="under-40">Menos de $40</option>
+            </select>
+          </div>
+
+          <!-- Filter: ESRB Age Rating -->
+          <div class="filter-group">
+            <label class="filter-label" for="filter-esrb">Clasificación por Edad (ESRB)</label>
+            <select id="filter-esrb" class="filter-select">
+              <option value="Todas">Todas las clasificaciones</option>
+              <option value="E (Everyone)">E (Apto para Todos)</option>
+              <option value="E10+ (Everyone 10+)">E10+ (Mayores de 10 años)</option>
+              <option value="T (Teen)">T (Adolescentes 13+)</option>
+              <option value="M (Mature 17+)">M (Maduro 17+)</option>
+            </select>
+          </div>
+
+          <!-- Filter: Game Modes (Checkboxes) -->
+          <div class="filter-group">
+            <span class="filter-label">Modos de Juego</span>
+            <div class="checkbox-list">
+              <label class="checkbox-label">
+                <input type="checkbox" class="filter-mode-cb" value="Un Jugador"> Un Jugador (Single-player)
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" class="filter-mode-cb" value="Cooperativo"> Modo Cooperativo (Co-op)
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" class="filter-mode-cb" value="Multijugador"> Multijugador / PvP Online
+              </label>
+            </div>
+          </div>
+
+        </aside>
+
+        <!-- Right Content: Results Controls + Game Cards Grid -->
+        <div class="content-results-area">
+          
+          <!-- Quick Filter Tabs -->
+          <div class="quick-filter-tabs" id="quick-filter-tabs">
+            <button class="tab-btn active" data-tab="all">🌟 Todos</button>
+            <button class="tab-btn" data-tab="trending">🔥 En Tendencia</button>
+            <button class="tab-btn" data-tab="masterpieces">👑 Obras Maestras (90+)</button>
+            <button class="tab-btn" data-tab="deals">🏷️ Con Descuento</button>
+            <button class="tab-btn" data-tab="coop">👥 Cooperativo</button>
+            <button class="tab-btn" data-tab="indie">💎 Joyas Indie</button>
+          </div>
+
+          <!-- Active Filter Badges Strip -->
+          <div id="active-filters-bar" class="active-filters-bar" style="display:none;"></div>
+
+          <!-- Controls Bar (Sorting, View Toggle, Count) -->
+          <div class="results-controls">
+            <div class="results-stats">
+              <span>Mostrando </span>
+              <strong id="results-count" class="results-count">0</strong>
+              <span> videojuegos</span>
+            </div>
+
+            <div class="controls-right">
+              <div class="sort-wrapper">
+                <label for="sort-games-select">Ordenar:</label>
+                <select id="sort-games-select" class="sort-select">
+                  <option value="rating-desc">Mayor Puntuación (Metacritic)</option>
+                  <option value="release-newest">Más Recientes (Fecha)</option>
+                  <option value="release-oldest">Más Antiguos</option>
+                  <option value="price-asc">Precio: Más Bajo Primero</option>
+                  <option value="price-desc">Precio: Más Alto Primero</option>
+                  <option value="title-asc">Nombre (A - Z)</option>
+                </select>
+              </div>
+
+              <!-- View Switcher -->
+              <div class="view-switcher">
+                <button id="view-grid-btn" class="view-btn active" title="Vista Cuadrícula">▦</button>
+                <button id="view-list-btn" class="view-btn" title="Vista Lista Detallada">☰</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Dynamic Games Grid -->
+          <div id="games-grid" class="games-grid">
+            <!-- Game Cards Rendered by JS -->
+          </div>
+
+          <!-- Empty State Container -->
+          <div id="empty-state" class="empty-state" style="display:none;">
+            <div class="empty-state-icon">👾</div>
+            <h3 class="empty-state-title">No se encontraron juegos con esos criterios</h3>
+            <p class="empty-state-desc">Intenta ajustar o reiniciar los filtros de género, plataforma o puntuación para ver más títulos.</p>
+            <button id="btn-empty-reset" class="btn-hero-primary" style="margin: 0 auto;">Restablecer Todos los Filtros</button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================
+       Deep Technical Detail Modal (Ficha Técnica Completa)
+       ========================================== -->
+  <div id="game-detail-modal" class="modal-overlay" aria-modal="true" role="dialog">
+    <div class="detail-modal-container">
+      <button id="modal-close-btn" class="modal-close-btn" aria-label="Cerrar modal" onclick="window.nexusApp.closeModal()">✕</button>
+      
+      <!-- Hero Header of the Modal -->
+      <div id="modal-hero" class="modal-hero">
+        <div class="modal-hero-overlay"></div>
+        <div class="modal-hero-content" id="modal-hero-content">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Navigation Tabs inside the Modal -->
+      <nav class="modal-tabs-nav" id="modal-tabs-nav">
+        <button class="modal-tab active" data-modaltab="tab-general" onclick="window.nexusApp.switchModalTab('tab-general')">📖 Sinopsis & Características</button>
+        <button class="modal-tab" data-modaltab="tab-specs" onclick="window.nexusApp.switchModalTab('tab-specs')">💻 Requisitos de Sistema</button>
+        <button class="modal-tab" data-modaltab="tab-gallery" onclick="window.nexusApp.switchModalTab('tab-gallery')">🖼️ Galería de Capturas</button>
+        <button class="modal-tab" data-modaltab="tab-reviews" onclick="window.nexusApp.switchModalTab('tab-reviews')">⏱️ Duración & Análisis</button>
+        <button class="modal-tab" data-modaltab="tab-stores" onclick="window.nexusApp.switchModalTab('tab-stores')">🛒 Dónde Comprar</button>
+      </nav>
+
+      <!-- Modal Body Tab Panes -->
+      <div class="modal-body-content">
+        <!-- Tab 1: General & Lore -->
+        <div id="tab-general" class="tab-pane active"></div>
+
+        <!-- Tab 2: System Requirements -->
+        <div id="tab-specs" class="tab-pane"></div>
+
+        <!-- Tab 3: Screenshot Gallery -->
+        <div id="tab-gallery" class="tab-pane"></div>
+
+        <!-- Tab 4: Playtime & Scores -->
+        <div id="tab-reviews" class="tab-pane"></div>
+
+        <!-- Tab 5: Stores & Platforms -->
+        <div id="tab-stores" class="tab-pane"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       Game Comparison Modal
+       ========================================== -->
+  <div id="compare-modal" class="modal-overlay" aria-modal="true" role="dialog">
+    <div class="detail-modal-container" style="max-width: 1040px;">
+      <button id="compare-modal-close" class="modal-close-btn" aria-label="Cerrar comparador" onclick="window.nexusApp.closeComparisonModal()">✕</button>
+      <div style="padding: 2rem;">
+        <h2 style="font-family: var(--font-display); font-size: 2.2rem; color: var(--text-bright); margin-bottom: 0.5rem;">
+          ⚖️ Comparador Técnico Frente a Frente
+        </h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.2rem;">
+          Compara especificaciones técnicas, motor, requisitos, duración estimada y precios de hasta 3 videojuegos.
+        </p>
+
+        <!-- Quick Game Adder inside the modal -->
+        <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:1.5rem; background:rgba(22,27,48,0.7); padding:0.8rem 1.2rem; border-radius:var(--radius-md); border:1px solid var(--border-subtle); flex-wrap:wrap;">
+          <span style="font-size:0.88rem; color:var(--accent-cyan); font-weight:700;">➕ Agregar juego a la comparativa:</span>
+          <select id="compare-add-select" class="filter-select" style="max-width:320px;">
+            <option value="">Seleccionar juego del catálogo...</option>
+          </select>
+          <button id="btn-add-to-compare" class="action-btn primary" style="padding:0.5rem 1rem;">Agregar</button>
+        </div>
+
+        <div id="comparison-content-wrapper">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       Random Game Roulette Modal ("¿A qué jugar?")
+       ========================================== -->
+  <div id="roulette-modal" class="modal-overlay" aria-modal="true" role="dialog">
+    <div class="detail-modal-container" style="max-width: 600px;">
+      <button id="roulette-modal-close" class="modal-close-btn" aria-label="Cerrar ruleta" onclick="window.nexusApp.closeRouletteModal()">✕</button>
+      <div class="roulette-container">
+        <h2 style="font-family: var(--font-display); font-size: 2.2rem; color: var(--text-bright); margin-bottom: 0.5rem;">
+          🎲 Ruleta de Elección Aleatoria
+        </h2>
+        <p style="color: var(--text-muted);">¿Indeciso con qué jugar? Deja que el azar seleccione el próximo juego según tus filtros activos.</p>
+        
+        <div id="roulette-display-box" class="roulette-box">
+          <span style="font-size: 3rem; margin-bottom: 0.8rem;">🎯</span>
+          <p style="color: var(--text-main); font-weight: 600;">Presiona el botón para girar la ruleta de BenjaGames</p>
+        </div>
+
+        <button id="btn-spin-roulette" class="btn-hero-primary" style="margin: 0 auto;">
+          🎰 Girar Ruleta de Videojuegos
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       Saved Wishlist Drawer Panel
+       ========================================== -->
+  <div id="wishlist-drawer-overlay" class="drawer-overlay" onclick="window.nexusApp.closeWishlist()"></div>
+  <aside id="wishlist-drawer-panel" class="drawer-panel" aria-label="Juegos Guardados">
+    <div class="drawer-header">
+      <h3 class="drawer-title">⭐ Mis Juegos Guardados</h3>
+      <button id="drawer-close-btn" style="color: var(--text-muted); font-size: 1.2rem;" onclick="window.nexusApp.closeWishlist()">✕</button>
+    </div>
+    <div id="wishlist-items-list" class="drawer-content">
+      <!-- Rendered dynamically -->
+    </div>
+    <div style="padding: 1.2rem; border-top: 1px solid var(--border-subtle); display: flex; gap: 0.8rem;">
+      <button id="btn-clear-wishlist" class="action-btn" style="flex: 1; justify-content: center;">Vaciar Lista</button>
+    </div>
+  </aside>
+
+  <!-- Notification Toasts Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ==========================================
+       Footer
+       ========================================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong style="color: var(--text-bright); font-size: 1.2rem; font-family: var(--font-display);">BenjaGames 2026</strong>
+        <p style="margin-top: 0.2rem;">Motor de búsqueda, clasificación y análisis técnico local para entusiastas de los videojuegos.</p>
+      </div>
+      <div>
+        <span>Datos locales verificados • Requisitos de Hardware • Calificaciones Metacritic</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
