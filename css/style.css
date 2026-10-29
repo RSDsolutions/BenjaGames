@@ -607,6 +607,81 @@ input, select {
   gap: 0.5rem;
 }
 
+.filter-header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-close-filter-mobile {
+  display: none;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  transition: all var(--transition-fast);
+}
+
+.btn-close-filter-mobile:hover {
+  background: var(--accent-crimson);
+  color: #fff;
+  border-color: var(--accent-crimson);
+}
+
+.filter-mobile-footer {
+  display: none;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Mobile Filter Backdrop */
+.filters-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 7, 12, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 150;
+  display: none;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.filters-backdrop.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Mobile Filter Toggle Button in Discovery Content */
+.btn-toggle-filters-mobile {
+  display: none;
+  width: 100%;
+  padding: 0.8rem 1.2rem;
+  background: rgba(22, 27, 48, 0.85);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-md);
+  color: var(--text-bright);
+  font-size: 0.92rem;
+  font-weight: 700;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all var(--transition-fast);
+}
+
+.btn-toggle-filters-mobile:hover {
+  border-color: var(--accent-cyan);
+  background: rgba(30, 38, 68, 0.95);
+  transform: translateY(-1px);
+}
+
 .btn-reset-filters {
   font-size: 0.78rem;
   color: var(--accent-cyan);
@@ -1259,6 +1334,12 @@ input, select {
   color: var(--text-muted);
 }
 
+.modal-hero-action {
+  align-self: flex-start;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
 /* Modal Nav Tabs */
 .modal-tabs-nav {
   display: flex;
@@ -1490,9 +1571,57 @@ input, select {
 /* ==========================================================================
    Comparison Modal (Comparador Lado a Lado)
    ========================================================================== */
+.compare-modal-container {
+  max-width: 1040px;
+}
+
+.compare-modal-body {
+  padding: 2rem;
+}
+
+.compare-modal-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+}
+
+.compare-modal-desc {
+  color: var(--text-muted);
+  margin-bottom: 1.2rem;
+  font-size: 0.95rem;
+}
+
+.compare-add-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  background: rgba(22, 27, 48, 0.7);
+  padding: 0.8rem 1.2rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+}
+
+.compare-add-label {
+  font-size: 0.88rem;
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+
+.compare-add-select {
+  max-width: 320px;
+}
+
+.compare-add-btn {
+  padding: 0.5rem 1rem;
+}
+
 .comparison-table-wrapper {
   overflow-x: auto;
   margin-top: 1rem;
+  -webkit-overflow-scrolling: touch;
 }
 
 .comparison-table {
@@ -1695,50 +1824,687 @@ input, select {
 }
 
 /* ==========================================================================
-   Responsive Breakpoints
+   Responsive Breakpoints & Adaptability
    ========================================================================== */
-@media (max-width: 1024px) {
+
+/* Laptops & Medium Desktops (max-width: 1200px) */
+@media (max-width: 1200px) {
+  .container {
+    padding: 0 1.25rem;
+  }
   .discovery-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: 260px 1fr;
+    gap: 1.5rem;
   }
   .filters-sidebar {
-    position: static;
-    max-height: none;
+    padding: 1.25rem;
   }
-  .curated-highlights-grid {
-    grid-template-columns: 1fr;
+  .hero-content {
+    padding: 2.5rem;
   }
-  .req-table-wrapper {
-    grid-template-columns: 1fr;
+  .hero-title {
+    font-size: 2.6rem;
   }
 }
 
+/* Tablets (Landscape & Portrait) and Small Laptops (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .discovery-layout {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  /* Slide-in Mobile Filter Drawer */
+  .filters-sidebar {
+    position: fixed;
+    top: 0;
+    left: -370px;
+    width: 340px;
+    max-width: 86vw;
+    height: 100vh;
+    max-height: 100vh;
+    background: #111524;
+    border-right: 1px solid var(--border-highlight);
+    border-radius: 0;
+    z-index: 160;
+    padding: 1.5rem 1.25rem;
+    overflow-y: auto;
+    box-shadow: 15px 0 45px rgba(0, 0, 0, 0.85);
+    transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .filters-sidebar.mobile-open {
+    left: 0;
+  }
+
+  .btn-toggle-filters-mobile {
+    display: flex;
+  }
+
+  .btn-close-filter-mobile {
+    display: flex;
+  }
+
+  .filter-mobile-footer {
+    display: block;
+  }
+
+  .curated-highlights-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.9rem;
+  }
+
+  .req-table-wrapper {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .spec-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+/* Tablets Portrait & Large Phablets (max-width: 860px) */
+@media (max-width: 860px) {
+  .curated-highlights-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .hero-title {
+    font-size: 2.3rem;
+  }
+
+  .hero-content {
+    padding: 2rem 1.75rem;
+  }
+}
+
+/* Standard Mobile & Small Tablets (max-width: 768px) */
 @media (max-width: 768px) {
+  /* Header Modern 2-Tier Mobile Grid */
+  .site-header {
+    padding: 0.65rem 0;
+  }
+
   .header-inner {
-    flex-direction: column;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "brand actions"
+      "search search";
+    gap: 0.75rem 0.5rem;
+    align-items: center;
   }
+
+  .brand {
+    grid-area: brand;
+    gap: 0.55rem;
+  }
+
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1.15rem;
+  }
+
+  .brand-name {
+    font-size: 1.35rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.62rem;
+  }
+
   .header-actions {
-    justify-content: space-between;
+    grid-area: actions;
+    display: flex;
+    gap: 0.45rem;
+    justify-content: flex-end;
   }
+
+  .action-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.82rem;
+    gap: 0.4rem;
+  }
+
+  .header-search {
+    grid-area: search;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    padding: 1.5rem 0 1rem;
+  }
+
+  .hero-card {
+    min-height: 380px;
+    border-radius: var(--radius-md);
+  }
+
+  .hero-content {
+    padding: 1.75rem 1.4rem;
+  }
+
   .hero-title {
     font-size: 2.1rem;
   }
-  .hero-content {
-    padding: 1.5rem;
+
+  .hero-tagline {
+    font-size: 0.98rem;
+    line-height: 1.4;
   }
+
+  .hero-meta-strip {
+    gap: 0.6rem 1.2rem;
+    font-size: 0.84rem;
+    margin-bottom: 1.4rem;
+  }
+
+  /* Games Grid Responsive Columns */
+  .games-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.2rem;
+  }
+
+  /* List View Optimized for Mobile */
+  .games-grid.list-view .game-card {
+    flex-direction: row;
+    height: auto;
+    min-height: 130px;
+  }
+
+  .games-grid.list-view .game-card-media {
+    width: 120px;
+    min-width: 120px;
+    height: auto;
+    min-height: 130px;
+  }
+
+  .games-grid.list-view .game-card-body {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.85rem;
+    gap: 0.5rem;
+  }
+
+  .games-grid.list-view .card-info-col {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .games-grid.list-view .card-footer {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Detail Modal Hero Header */
   .modal-hero-content {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.9rem;
   }
+
   .modal-cover-thumb {
-    width: 100px;
-    height: 140px;
+    width: 105px;
+    height: 145px;
   }
+
+  .modal-title {
+    font-size: 2rem;
+  }
+
+  .modal-hero-action {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .modal-hero-action .action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
   .gallery-grid {
     grid-template-columns: 1fr;
+    gap: 0.8rem;
   }
+
   .playtime-row {
     grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .playtime-hours {
+    font-size: 2rem;
+  }
+}
+
+/* Mobile Phones (max-width: 640px) */
+@media (max-width: 640px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .hero-section {
+    padding: 1.1rem 0 0.8rem;
+  }
+
+  .hero-card {
+    min-height: 330px;
+  }
+
+  .hero-content {
+    padding: 1.25rem 1rem;
+  }
+
+  .hero-title {
+    font-size: 1.7rem;
+  }
+
+  .hero-cta-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.6rem;
+  }
+
+  .btn-hero-primary,
+  .btn-hero-secondary {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* Quick Filter Tabs Touch Scroll */
+  .quick-filter-tabs {
+    gap: 0.45rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.9rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .quick-filter-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab-btn {
+    padding: 0.42rem 0.85rem;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  /* Results Controls Toolbar */
+  .results-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.75rem 0.9rem;
+  }
+
+  .results-stats {
+    text-align: center;
+    font-size: 0.85rem;
+  }
+
+  .controls-right {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+
+  .sort-wrapper {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sort-select {
+    width: 100%;
+    font-size: 0.82rem;
+    padding: 0.45rem 0.6rem;
+  }
+
+  .view-switcher {
+    flex-shrink: 0;
+  }
+
+  /* 1-column Game Cards on Mobile */
+  .games-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .game-card-media {
+    height: 185px;
+  }
+
+  .game-card-body {
+    padding: 1rem;
+  }
+
+  /* Fullscreen Modal on Mobile */
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .detail-modal-container {
+    max-width: 100vw;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+  }
+
+  .modal-close-btn {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .modal-hero {
+    min-height: 210px;
+    padding: 1.3rem 1rem 1rem;
+  }
+
+  .modal-tabs-nav {
+    padding: 0 0.8rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal-tabs-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .modal-tab {
+    padding: 0.75rem 0.95rem;
+    font-size: 0.82rem;
+    flex-shrink: 0;
+  }
+
+  .modal-body-content {
+    padding: 1.25rem 1rem;
+  }
+
+  .spec-grid {
+    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+    gap: 0.7rem;
+  }
+
+  .spec-box {
+    padding: 0.75rem;
+  }
+
+  .spec-title {
+    font-size: 0.68rem;
+  }
+
+  .spec-value {
+    font-size: 0.88rem;
+  }
+
+  /* Comparison Modal on Mobile */
+  .compare-modal-container {
+    max-width: 100vw;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+  }
+
+  .compare-modal-body {
+    padding: 1.25rem 1rem;
+  }
+
+  .compare-modal-title {
+    font-size: 1.5rem;
+  }
+
+  .compare-add-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+    padding: 0.85rem;
+  }
+
+  .compare-add-select {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .compare-add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .comparison-table {
+    min-width: 520px;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 0.75rem 0.65rem;
+    font-size: 0.82rem;
+  }
+
+  /* Roulette Modal on Mobile */
+  .roulette-container {
+    padding: 1.75rem 1rem;
+  }
+
+  .roulette-box {
+    min-height: 200px;
+    padding: 1rem;
+    margin: 1rem auto;
+  }
+
+  /* Wishlist Drawer Full Screen on Mobile */
+  .drawer-panel {
+    width: 100%;
+    max-width: 100vw;
+    right: -100%;
+  }
+
+  .drawer-header {
+    padding: 1rem 1.2rem;
+  }
+
+  .drawer-content {
+    padding: 1rem;
+  }
+
+  /* Toast Notifications on Mobile */
+  .toast-container {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    align-items: center;
+  }
+
+  .toast {
+    width: 100%;
+    max-width: 360px;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.84rem;
+    padding: 0.65rem 1rem;
+  }
+
+  /* Footer on Mobile */
+  .site-footer {
+    padding: 2rem 0 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+}
+
+/* Compact Mobile Phones (max-width: 480px) */
+@media (max-width: 480px) {
+  .site-header {
+    padding: 0.55rem 0;
+  }
+
+  .brand-name {
+    font-size: 1.2rem;
+    letter-spacing: 0.8px;
+  }
+
+  .brand-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  .action-btn {
+    padding: 0.42rem 0.55rem;
+    font-size: 0.75rem;
+    gap: 0.35rem;
+  }
+
+  .badge-counter {
+    font-size: 0.68rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+  .hero-tagline {
+    font-size: 0.88rem;
+  }
+
+  .hero-badge-row {
+    font-size: 0.75rem;
+    gap: 0.35rem;
+  }
+
+  .spotlight-pill {
+    font-size: 0.68rem;
+    padding: 0.2rem 0.55rem;
+  }
+
+  .metascore-badge {
+    font-size: 0.85rem;
+    padding: 0.15rem 0.5rem;
+  }
+
+  .hero-meta-strip {
+    font-size: 0.78rem;
+    gap: 0.4rem 0.8rem;
+  }
+
+  /* List View Card for small phones */
+  .games-grid.list-view .game-card-media {
+    width: 95px;
+    min-width: 95px;
+  }
+
+  .games-grid.list-view .card-title {
+    font-size: 0.95rem;
+  }
+
+  .games-grid.list-view .card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .btn-details-card {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* Modal detail items */
+  .modal-cover-thumb {
+    width: 80px;
+    height: 110px;
+  }
+
+  .modal-title {
+    font-size: 1.4rem;
+  }
+
+  .modal-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .modal-tab {
+    padding: 0.7rem 0.85rem;
+    font-size: 0.78rem;
+  }
+
+  .stores-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .store-link-btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 0.84rem;
+  }
+
+  #btn-spin-roulette {
+    width: 100%;
+    justify-content: center;
+    font-size: 0.88rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .sort-wrapper label {
+    display: none;
+  }
+}
+
+/* Extra Small Mobile Devices (max-width: 360px) */
+@media (max-width: 360px) {
+  .brand-name {
+    font-size: 1.1rem;
+  }
+
+  .action-btn {
+    padding: 0.38rem 0.45rem;
+    font-size: 0.7rem;
+  }
+
+  .search-input {
+    padding: 0.65rem 2.2rem 0.65rem 2.4rem;
+    font-size: 0.88rem;
+  }
+
+  .search-icon {
+    left: 0.85rem;
+    font-size: 0.95rem;
+  }
+
+  .quick-filter-tabs {
+    gap: 0.35rem;
+  }
+
+  .tab-btn {
+    font-size: 0.74rem;
+    padding: 0.38rem 0.7rem;
   }
 }

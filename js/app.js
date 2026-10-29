@@ -47,6 +47,12 @@ function cacheElements() {
     btnResetFilters: document.getElementById('btn-reset-filters'),
     quickFilterTabs: document.getElementById('quick-filter-tabs'),
     activeFiltersBar: document.getElementById('active-filters-bar'),
+    filtersSidebar: document.getElementById('filters-sidebar'),
+    filtersSidebarOverlay: document.getElementById('filters-sidebar-overlay'),
+    btnToggleFiltersMobile: document.getElementById('btn-toggle-filters-mobile'),
+    btnCloseFilterMobile: document.getElementById('btn-close-filter-mobile'),
+    btnApplyFiltersMobile: document.getElementById('btn-apply-filters-mobile'),
+    mobileFilterBadge: document.getElementById('mobile-filter-badge'),
 
     // Results Controls
     resultsCount: document.getElementById('results-count'),
@@ -326,6 +332,7 @@ function applyFiltersAndRender() {
 
   state.filteredGames = list;
   renderActiveFilterBadges();
+  updateMobileFilterBadge();
   renderGamesGrid();
 }
 
@@ -569,7 +576,7 @@ function openGameDetail(gameId) {
         <span>⏱️ Historia: <strong>${game.playtime.mainStory}</strong></span>
       </div>
     </div>
-    <div style="align-self:flex-start; margin-left:auto;">
+    <div class="modal-hero-action">
       <button class="action-btn ${isWished ? 'primary' : ''}" onclick="window.nexusApp.toggleWishlist('${game.id}')">
         ${isWished ? '❤️ Guardado' : '🤍 Guardar'}
       </button>
@@ -1153,6 +1160,54 @@ function resetAllFilters() {
 }
 
 /* ==========================================================================
+   Mobile Filter Drawer Management
+   ========================================================================== */
+function countActiveFilters() {
+  let count = 0;
+  if (state.filters.query && state.filters.query.trim()) count++;
+  if (state.filters.genre !== 'Todos') count++;
+  if (state.filters.platform !== 'Todas') count++;
+  if (state.filters.minScore > 60) count++;
+  if (state.filters.priceCategory !== 'all') count++;
+  if (state.filters.esrb !== 'Todas') count++;
+  count += state.filters.modes.length;
+  return count;
+}
+
+function updateMobileFilterBadge() {
+  if (!el.mobileFilterBadge) return;
+  const count = countActiveFilters();
+  if (count > 0) {
+    el.mobileFilterBadge.textContent = count;
+    el.mobileFilterBadge.style.display = 'inline-flex';
+  } else {
+    el.mobileFilterBadge.style.display = 'none';
+  }
+}
+
+function openFilterDrawer() {
+  if (el.filtersSidebar) el.filtersSidebar.classList.add('mobile-open');
+  if (el.filtersSidebarOverlay) el.filtersSidebarOverlay.classList.add('active');
+  if (window.innerWidth <= 1024) {
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeFilterDrawer() {
+  if (el.filtersSidebar) el.filtersSidebar.classList.remove('mobile-open');
+  if (el.filtersSidebarOverlay) el.filtersSidebarOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function toggleFilterDrawer() {
+  if (el.filtersSidebar && el.filtersSidebar.classList.contains('mobile-open')) {
+    closeFilterDrawer();
+  } else {
+    openFilterDrawer();
+  }
+}
+
+/* ==========================================================================
    Event Listeners
    ========================================================================== */
 function setupEventListeners() {
@@ -1329,6 +1384,12 @@ function setupEventListeners() {
     });
   }
 
+  // Mobile Filter Drawer Events
+  if (el.btnToggleFiltersMobile) el.btnToggleFiltersMobile.addEventListener('click', toggleFilterDrawer);
+  if (el.btnCloseFilterMobile) el.btnCloseFilterMobile.addEventListener('click', closeFilterDrawer);
+  if (el.btnApplyFiltersMobile) el.btnApplyFiltersMobile.addEventListener('click', closeFilterDrawer);
+  if (el.filtersSidebarOverlay) el.filtersSidebarOverlay.addEventListener('click', closeFilterDrawer);
+
   // Keyboard accessibility
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -1336,6 +1397,7 @@ function setupEventListeners() {
       closeComparisonModal();
       closeWishlist();
       closeRouletteModal();
+      closeFilterDrawer();
       if (el.autocompleteList) el.autocompleteList.classList.remove('active');
     }
   });
@@ -1356,6 +1418,9 @@ window.nexusApp = {
   closeWishlist,
   openRouletteModal,
   closeRouletteModal,
+  openFilterDrawer,
+  closeFilterDrawer,
+  toggleFilterDrawer,
   removeFilter,
   resetAllFilters
 };

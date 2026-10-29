@@ -49,16 +49,16 @@
       <div class="header-actions">
         <button id="btn-roulette-open" class="action-btn" title="Elige un juego aleatorio">
           <span>🎲</span>
-          <span>Ruleta Aleatoria</span>
+          <span class="action-btn-label">Ruleta Aleatoria</span>
         </button>
         <button id="btn-compare-open" class="action-btn" title="Comparar especificaciones entre juegos">
           <span>⚖️</span>
-          <span>Comparar</span>
+          <span class="action-btn-label">Comparar</span>
           <span id="compare-counter" class="badge-counter" style="display:none;">0</span>
         </button>
         <button id="btn-wishlist-open" class="action-btn primary" title="Ver juegos guardados">
           <span>⭐</span>
-          <span>Guardados</span>
+          <span class="action-btn-label">Guardados</span>
           <span id="wishlist-counter" class="badge-counter">0</span>
         </button>
       </div>
@@ -88,11 +88,17 @@
     <section class="discovery-section">
       <div class="container discovery-layout">
         
+        <!-- Mobile Filter Backdrop Overlay -->
+        <div id="filters-sidebar-overlay" class="filters-backdrop"></div>
+
         <!-- Left Filter & Classification Sidebar -->
-        <aside class="filters-sidebar">
+        <aside class="filters-sidebar" id="filters-sidebar">
           <div class="filter-header">
             <h2 class="filter-title"><span>⚡</span> Filtros & Clasificación</h2>
-            <button id="btn-reset-filters" class="btn-reset-filters">Restablecer Todo</button>
+            <div class="filter-header-buttons">
+              <button id="btn-reset-filters" class="btn-reset-filters">Restablecer Todo</button>
+              <button id="btn-close-filter-mobile" class="btn-close-filter-mobile" aria-label="Cerrar filtros">✕</button>
+            </div>
           </div>
 
           <!-- Filter: Genre -->
@@ -175,11 +181,24 @@
             </div>
           </div>
 
+          <!-- Mobile Apply Button inside Drawer -->
+          <div class="filter-mobile-footer">
+            <button id="btn-apply-filters-mobile" class="btn-hero-primary" style="width:100%; justify-content:center;">
+              Ver Resultados
+            </button>
+          </div>
+
         </aside>
 
         <!-- Right Content: Results Controls + Game Cards Grid -->
         <div class="content-results-area">
           
+          <!-- Mobile Filter Drawer Trigger -->
+          <button id="btn-toggle-filters-mobile" class="btn-toggle-filters-mobile" aria-label="Abrir panel de filtros">
+            <span>⚡ Filtros Avanzados</span>
+            <span id="mobile-filter-badge" class="badge-counter" style="display:none;">0</span>
+          </button>
+
           <!-- Quick Filter Tabs -->
           <div class="quick-filter-tabs" id="quick-filter-tabs">
             <button class="tab-btn active" data-tab="all">🌟 Todos</button>
@@ -289,23 +308,23 @@
        Game Comparison Modal
        ========================================== -->
   <div id="compare-modal" class="modal-overlay" aria-modal="true" role="dialog">
-    <div class="detail-modal-container" style="max-width: 1040px;">
+    <div class="detail-modal-container compare-modal-container">
       <button id="compare-modal-close" class="modal-close-btn" aria-label="Cerrar comparador" onclick="window.nexusApp.closeComparisonModal()">✕</button>
-      <div style="padding: 2rem;">
-        <h2 style="font-family: var(--font-display); font-size: 2.2rem; color: var(--text-bright); margin-bottom: 0.5rem;">
+      <div class="compare-modal-body">
+        <h2 class="compare-modal-title">
           ⚖️ Comparador Técnico Frente a Frente
         </h2>
-        <p style="color: var(--text-muted); margin-bottom: 1.2rem;">
+        <p class="compare-modal-desc">
           Compara especificaciones técnicas, motor, requisitos, duración estimada y precios de hasta 3 videojuegos.
         </p>
 
         <!-- Quick Game Adder inside the modal -->
-        <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:1.5rem; background:rgba(22,27,48,0.7); padding:0.8rem 1.2rem; border-radius:var(--radius-md); border:1px solid var(--border-subtle); flex-wrap:wrap;">
-          <span style="font-size:0.88rem; color:var(--accent-cyan); font-weight:700;">➕ Agregar juego a la comparativa:</span>
-          <select id="compare-add-select" class="filter-select" style="max-width:320px;">
+        <div class="compare-add-bar">
+          <span class="compare-add-label">➕ Agregar juego a la comparativa:</span>
+          <select id="compare-add-select" class="filter-select compare-add-select">
             <option value="">Seleccionar juego del catálogo...</option>
           </select>
-          <button id="btn-add-to-compare" class="action-btn primary" style="padding:0.5rem 1rem;">Agregar</button>
+          <button id="btn-add-to-compare" class="action-btn primary compare-add-btn">Agregar</button>
         </div>
 
         <div id="comparison-content-wrapper">
